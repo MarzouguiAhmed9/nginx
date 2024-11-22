@@ -18,7 +18,7 @@ pipeline {
     stage ('run nginxcontainer'){
         steps {
             script{
-                sh 'docker run -d -p 80:80 myimagea'
+                sh 'docker run -d -p 80:80 ahlawsahla'
             }
         }
     }
