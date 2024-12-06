@@ -11,7 +11,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t ahlawsahla .'
+                    sh 'docker build -t ahmed20007/ahlawsahla .'
                 }
             }
         }
@@ -19,7 +19,7 @@ pipeline {
         stage('Run Nginx Container') {
             steps {
                 script {
-                    sh 'docker run -d -p 8089:80 ahlawsahla'
+                    sh 'docker run -d -p 8089:80 ahmed20007/ahlawsahla'
                 }
             }
         }
@@ -31,8 +31,8 @@ pipeline {
                         // Login to Docker Hub or your Docker registry using the credentials
                         sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                         
-                        // Push the built image to the Docker registry
-                        sh 'docker push ahlawsahla'
+                        // Push the built image to the correct Docker registry
+                        sh 'docker push ahmed20007/ahlawsahla'
                     }
                 }
             }
