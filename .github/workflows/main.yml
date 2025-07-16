@@ -1,0 +1,38 @@
+name: CI
+
+on: [push]
+
+jobs:
+  image_scan_nginx:
+    name: Build Nginx Image and Run Image Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker-practice/actions-setup-docker@v1
+        with:
+          docker_version: '20.10.7'
+
+      - name: Build Nginx Docker Image
+        run: |
+          docker build -f Dockerfile.nginx -t my-nginx:latest .
+
+      - name: Docker Scout Scan
+        uses: docker/scout-action@v1.0.9
+        with:
+          dockerhub-user: ${{ secrets.REPO_USER }}
+          dockerhub-password: ${{ secrets.REPO_PWD }}
+          command: quickview,cves
+          only-severities: critical,high
+          sarif-file: scout-nginx-report.sarif
+          image-name: my-nginx:latest   # specify the image to scan
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: docker-scout-nginx-findings
+          path: scout-nginx-report.sarif
